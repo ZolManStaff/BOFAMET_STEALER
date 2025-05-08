@@ -1,3 +1,5 @@
+![BOFAMET Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/bofamet.jpg)
+
 # BOFAMET - Стиллер
 
 BOFAMET — это стилер на основе Python, предназначенный для сбора данных с целевой системы, дополненный билдером, который компилирует коллектор в автономный EXE файл Windows. Собранные данные впоследствии передаются через Telegram-бота.
