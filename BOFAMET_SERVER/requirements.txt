@@ -3,3 +3,4 @@ uvicorn
 python-multipart
 aiofiles
 itsdangerous
+jinja2
