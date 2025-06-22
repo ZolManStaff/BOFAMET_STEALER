@@ -1,3 +1,5 @@
+![LOGO Screenshot](path/to/c2_panel_screenshot.png)
+
 # BOFAMET – Data Collection and Control Infrastructure
 
 BOFAMET is a comprehensive solution for collecting data from target systems, consisting of a collector module (stealer) and a centralized command and control (C2) server. The collector, written in Python, is compiled into a standalone Windows executable, and the collected data is transmitted to the C2 server, developed using FastAPI.
@@ -50,7 +52,8 @@ The C2 server is a web panel based on FastAPI for receiving, storing, and managi
 ### Key Features:
 
 *   **Web Interface:** An intuitive web interface for viewing and managing received logs.
-    ![C2 Panel Screenshot](path/to/c2_panel_screenshot.png)
+    ![C2 Panel Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82%2020-06-2025%20222723.jpg)
+    ![C2 Panel Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82%2020-06-2025%20222849.jpg)
 *   **Access Protection:**
     *   **Authentication:** Secure login to the administrative panel using customizable credentials.
     *   **Session IP Binding:** User sessions are bound to their IP address, ensuring logout if an IP address change is detected.
@@ -105,7 +108,7 @@ The server can be installed on Linux or Windows systems.
 
 **Accessing the Control Panel:**
 After successful server launch, the administrative panel can be accessed via a web browser at `http://<YOUR_SERVER_IP>:<PORT>/login`.
-    ![Login Page Screenshot](path/to/login_page_screenshot.png)
+    ![Login Page Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82%2018-06-2025%20081208.jpg)
 
 ### 2. Creating the Collector Module (Stealer) Using the Builder:
 
@@ -131,10 +134,9 @@ After successful server launch, the administrative panel can be accessed via a w
     *   Enter the IP address of your deployed C2 server (the same one you used during server setup).
     *   Enter the port of your C2 server.
     *   Optionally, provide the full path to an `.ico` file to be used as the icon for the generated executable.
-    ![Builder Configuration Screenshot](path/to/builder_config_screenshot.png)
+    ![Builder Configuration Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82%2022-06-2025%20193542.jpg)
 3.  **Build Process:** The builder will automatically obfuscate the collector's source code and compile it into an executable using PyInstaller.
 4.  **Result:** The finished executable, named `BOFAMET_BUILD.exe`, will be located in the `dist` directory relative to where the builder was launched.
-    ![Dist Folder Screenshot](path/to/dist_folder_screenshot.png)
 
 ## V. Collector Obfuscation Principle:
 
