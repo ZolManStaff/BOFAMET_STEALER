@@ -1,0 +1,653 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="ru" id="html-lang">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOFAMET - Авторизация</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent-primary: #2962ff;
+            --accent-secondary: #304ffe;
+            --accent-gradient: linear-gradient(135deg, #2962ff, #304ffe);
+            --border-color: #333333;
+            --input-bg: #252525;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glow: 0 0 15px rgba(41, 98, 255, 0.3);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8f9fa;
+            --bg-secondary: #ffffff;
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --accent-primary: #2962ff;
+            --accent-secondary: #304ffe;
+            --accent-gradient: linear-gradient(135deg, #2962ff, #304ffe);
+            --border-color: #dee2e6;
+            --input-bg: #f1f3f5;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --glow: 0 0 15px rgba(41, 98, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            transition: var(--transition);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(41, 98, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(41, 98, 255, 0.05) 0%, transparent 20%);
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--card-shadow), var(--glow);
+            border: 1px solid var(--border-color);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+            transition: var(--transition);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--accent-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+            box-shadow: var(--glow);
+            transition: var(--transition);
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(10deg) scale(1.05);
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.75rem;
+            color: var(--text-primary);
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-password:hover {
+            color: var(--accent-primary);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: var(--glow);
+            position: relative;
+            overflow: hidden;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .login-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .login-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
+            transition: var(--transition);
+            opacity: 0;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(41, 98, 255, 0.3);
+        }
+
+        .login-btn:hover::after {
+            opacity: 1;
+            transform: rotate(30deg) translate(0, 0);
+        }
+
+        .login-btn:active {
+            transform: translateY(1px);
+        }
+
+        .theme-control {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+            gap: 0.75rem;
+        }
+
+        .theme-toggle {
+            background: var(--input-bg);
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-primary);
+            transform: rotate(15deg);
+            box-shadow: var(--glow);
+        }
+
+        .error-message {
+            color: #ff5252;
+            text-align: center;
+            margin-top: 1.5rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            background: rgba(255, 82, 82, 0.1);
+            font-weight: 500;
+            animation: shake 0.5s ease;
+            border: 1px solid rgba(255, 82, 82, 0.2);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent-primary);
+            transition: var(--transition);
+        }
+
+        .footer a:hover::after {
+            width: 100%;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1.75rem;
+            }
+            
+            .logo-text {
+                font-size: 1.5rem;
+            }
+            
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            
+            body {
+                padding: 1rem;
+            }
+        }
+
+        @keyframes logoClick {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
+        .lang-toggle {
+            background: var(--input-bg);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .lang-toggle:hover {
+            background: var(--bg-secondary);
+            box-shadow: var(--glow);
+            transform: scale(1.1);
+        }
+
+        .form-input[disabled] {
+            cursor: not-allowed;
+            background-color: var(--input-bg);
+            opacity: 0.7;
+        }
+
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            gap: 10px;
+        }
+
+        .captcha-image {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: var(--accent-primary);
+            user-select: none;
+            cursor: pointer;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .captcha-image:hover {
+            transform: scale(1.02);
+            box-shadow: var(--glow);
+        }
+
+        .captcha-input {
+            flex-grow: 1;
+        }
+
+        .captcha-refresh {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .captcha-refresh:hover {
+            color: var(--accent-primary);
+            transform: rotate(30deg);
+            background: var(--input-bg);
+        }
+
+        .captcha-error {
+            color: #ff5252;
+            font-size: 0.875rem;
+            margin-top: -0.75rem;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo" id="logo">
+                <div class="logo-icon">B</div>
+                <div class="logo-text">BOFAMET</div>
+            </div>
+            <h2 class="login-title lang-text" data-ru="CONTROL PANEL" data-en="CONTROL PANEL">CONTROL PANEL</h2>
+        </div>
+        
+        <form action="/login" method="post">
+            <div class="form-group">
+                <label for="username" class="form-label lang-text" data-ru="Имя пользователя" data-en="Username">Имя пользователя</label>
+                <input type="text" id="username" name="username" class="form-input" required autocomplete="off" 
+                       placeholder="Введите ваш логин" data-ru="Введите ваш логин" data-en="Enter your username" disabled>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label lang-text" data-ru="Пароль" data-en="Password">Пароль</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" class="form-input" required autocomplete="off" 
+                           placeholder="Введите ваш пароль" data-ru="Введите ваш пароль" data-en="Enter your password" disabled>
+                    <button type="button" class="toggle-password" id="togglePassword" disabled>
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="captchaInput" class="form-label lang-text" data-ru="Введите капчу" data-en="Enter CAPTCHA">Введите капчу</label>
+                <div class="captcha-container">
+                    <span id="captchaImage" class="captcha-image"></span>
+                    <input type="text" id="captchaInput" class="form-input captcha-input" required autocomplete="off" placeholder="Введите символы" data-ru="Введите символы" data-en="Enter characters">
+                    <button type="button" class="captcha-refresh" id="captchaRefresh">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4C7.58,4 4.07,7.06 3.44,11.39L2,12L3.44,12.61C4.07,16.94 7.58,20 12,20C16.21,20 19.72,16.9 20.35,12.61L21.79,12L20.35,11.39C19.72,7.06 16.21,4 12,4V2L15,5L12,8V6.35C9.8,6.35 7.82,7.25 6.36,8.71C4.9,10.17 4,12.16 4,14.35C4,16.54 4.9,18.52 6.36,19.98C7.82,21.44 9.8,22.34 12,22.34C14.21,22.34 16.2,21.44 17.65,19.98C19.1,18.52 20,16.54 20,14.35V12H18V14.35C18,15.7 17.5,17 16.65,17.95C15.8,18.9 14.59,19.5 13.24,19.5C11.88,19.5 10.68,18.9 9.82,17.95C8.97,17 8.47,15.7 8.47,14.35C8.47,12.99 8.97,11.69 9.82,10.74C10.68,9.79 11.88,9.19 13.24,9.19C14.59,9.19 15.8,9.79 16.65,10.74C17.5,11.69 18,12.99 18,14.35V12H20V14.35C20,16.54 19.1,18.52 17.65,19.98Z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div id="captchaError" class="captcha-error" style="display: none;">Incorrect captcha</div>
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z"/>
+                </svg>
+                <span class="lang-text" data-ru="Войти" data-en="Login">Войти</span>
+            </button>
+        </form>
+        
+        <div class="theme-control">
+            <button class="lang-toggle" id="langToggle">EN</button>
+            <button class="theme-toggle" id="themeToggle">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12,22 C17.5228475,22 22,17.5228475 22,12 C22,6.4771525 17.5228475,2 12,2 C6.4771525,2 2,6.4771525 2,12 C2,17.5228475 6.4771525,22 12,22 Z M12,20 L12,4 C16.418278,4 20,7.581722 20,12 C20,16.418278 16.418278,20 12,20 Z"/>
+                </svg>
+            </button>
+        </div>
+        
+        {% if error_message %}
+            <div class="error-message">{{ error_message }}</div>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        <span class="lang-text" data-ru="Powered by BOFAMET. Created by" data-en="Powered by BOFAMET. Created by">Powered by BOFAMET. Created by</span> 
+        <a href="https://t.me/BIOzolman" target="_blank">Zolman</a>.
+    </div>
+
+    <script>
+        const langToggle = document.getElementById('langToggle');
+        let currentLang = localStorage.getItem('lang') || 'ru';
+        
+        function updateLanguage() {
+            document.getElementById('html-lang').setAttribute('lang', currentLang);
+            
+            langToggle.textContent = currentLang === 'ru' ? 'EN' : 'RU';
+            
+            document.querySelectorAll('.lang-text').forEach(el => {
+                el.textContent = el.getAttribute(`data-${currentLang}`);
+            });
+            
+            document.querySelectorAll('input[data-ru], input[data-en]').forEach(input => {
+                input.setAttribute('placeholder', input.getAttribute(`data-${currentLang}`));
+            });
+            
+            localStorage.setItem('lang', currentLang);
+        }
+        
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'ru' ? 'en' : 'ru';
+            updateLanguage();
+        });
+        
+        updateLanguage();
+        
+        const themeToggle = document.getElementById('themeToggle');
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        const logo = document.getElementById('logo');
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            themeToggle.style.transform = 'rotate(180deg)';
+            setTimeout(() => {
+                themeToggle.style.transform = 'rotate(0)';
+            }, 300);
+        });
+        
+        logo.addEventListener('click', function() {
+            this.style.animation = 'logoClick 0.3s ease';
+            setTimeout(() => {
+                this.style.animation = '';
+            }, 300);
+            
+            setTimeout(() => {
+                location.reload();
+            }, 200);
+        });
+        
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            this.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+        
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                if (captchaVerified) {
+                    input.parentElement.querySelector('.form-label').style.color = 'var(--accent-primary)';
+                }
+            });
+            
+            input.addEventListener('blur', () => {
+                if (captchaVerified) {
+                    input.parentElement.querySelector('.form-label').style.color = 'var(--text-primary)';
+                }
+            });
+        });
+
+        const captchaImage = document.getElementById('captchaImage');
+        const captchaInput = document.getElementById('captchaInput');
+        const captchaRefresh = document.getElementById('captchaRefresh');
+        const captchaError = document.getElementById('captchaError');
+        const usernameInput = document.getElementById('username');
+        const loginBtn = document.getElementById('loginBtn');
+        let currentCaptcha = '';
+        let captchaVerified = false;
+
+        function generateCaptcha() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let result = '';
+            for (let i = 0; i < 5; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function displayCaptcha() {
+            currentCaptcha = generateCaptcha();
+            captchaImage.textContent = currentCaptcha;
+            captchaInput.value = '';
+            captchaError.style.display = 'none';
+            disableForm();
+        }
+
+        function enableForm() {
+            usernameInput.removeAttribute('disabled');
+            passwordInput.removeAttribute('disabled');
+            togglePassword.removeAttribute('disabled');
+            loginBtn.classList.add('active');
+            captchaVerified = true;
+        }
+
+        function disableForm() {
+            usernameInput.setAttribute('disabled', 'disabled');
+            passwordInput.setAttribute('disabled', 'disabled');
+            togglePassword.setAttribute('disabled', 'disabled');
+            loginBtn.classList.remove('active');
+            captchaVerified = false;
+        }
+
+        captchaInput.addEventListener('input', () => {
+            if (captchaInput.value.toUpperCase() === currentCaptcha) {
+                captchaError.style.display = 'none';
+                enableForm();
+            } else {
+                captchaError.style.display = 'block';
+                disableForm();
+            }
+        });
+
+        captchaImage.addEventListener('click', displayCaptcha);
+        captchaRefresh.addEventListener('click', displayCaptcha);
+
+        displayCaptcha();
+    </script>
+</body>
+</html>
