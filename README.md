@@ -1,4 +1,4 @@
-![LOGO Screenshot](path/to/c2_panel_screenshot.png)
+![LOGO Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/photo_2025-06-22_19-48-33.jpg)
 
 # BOFAMET – Data Collection and Control Infrastructure
 
