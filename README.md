@@ -22,8 +22,10 @@ The collector module is designed for comprehensive information gathering from a 
     *   Public IP address identification and geolocation data (city, region, country, latitude, longitude).
 *   **Desktop Screenshot:** Captures an image of the current desktop of the target system.
 *   **Telegram Session Extraction:** Attempts to retrieve local Telegram session files (by forcibly terminating the Telegram process to gain access to session files).
+*   **AyuGram Session Extraction:** Attempts to retrieve local AyuGram session files.
 *   **Discord Token Discovery:** Scans the system for Discord authentication tokens in various locations.
 *   **Steam Configuration:** Copies configuration files of the Steam client.
+*   **Epic Games Configuration:** Copies configuration files of the Epic client.
 *   **Targeted File Exfiltration:** Searches for and steals files with specific extensions (.doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf, .bmp) from user directories.
 *   **Crypto Wallet Extraction:** Identifies and copies files associated with cryptocurrency wallets (e.g., `wallet.dat`, `key.json`, `keystore`, `mnemonic.txt`, `seed.txt`, as well as SSH keys like `id_rsa`).
 *   **Data Transmission:** Archives all collected data into ZIP files (partitioning into parts if necessary due to size limits) and subsequently transmits them, along with system information and geolocation data, to the configured C2 server.
