@@ -81,7 +81,7 @@ The server can be installed on Linux or Windows systems.
 
 **Prerequisites:**
 *   **Recommended Operating System: Ubuntu 20.04.**
-*   Python 3.x installed (Python 3.8 or newer is recommended).
+*   Python 3.8 installed (Python 3.8).
 *   `pip` utility for installing Python packages.
 
 **Installation Procedure (Linux, Recommended):**
@@ -115,7 +115,7 @@ After successful server launch, the administrative panel can be accessed via a w
 ### 2. Creating the Collector Module (Stealer) Using the Builder:
 
 **Prerequisites:**
-*   Python 3.x installed (Python 3.8+ is recommended).
+*   Python 3.8 installed (Python 3.8 is recommended).
 *   Python packages installed. Navigate to the builder directory and execute:
     ```bash
     pip install PyInstaller colorama Pillow pycryptodome pypiwin32 psutil requests aiofiles pystyle pywin32
