@@ -625,7 +625,6 @@
             <div class="map-container" id="mapid"></div>
         </div>
 
-        <!-- NEW TAB CONTENT FOR SERVER LOGS, YOU BASTARD! -->
         <div id="server-logs-tab" class="tab-content">
             <div class="control-buttons">
                 <button class="control-btn" id="refreshServerLogsBtn">
@@ -771,7 +770,6 @@
             }, 200);
         });
 
-        // Disable developer console functions (keeping the existing ones)
         (function() {
             function disable_f_keys() {
                 document.onkeydown = function(e) {
@@ -808,7 +806,6 @@
             document.addEventListener('contextmenu', event => event.preventDefault());
         })();
 
-        // Auto-refresh for Server Logs tab
         let serverLogsInterval;
         const serverLogsTabButton = document.querySelector('[data-tab="server-logs-tab"]');
         const serverLogDisplay = document.getElementById('server-log-display');
@@ -819,7 +816,7 @@
                 if (!response.ok) throw new Error('Failed to fetch server logs');
                 const data = await response.json();
                 serverLogDisplay.textContent = data.log_content;
-                serverLogDisplay.scrollTop = serverLogDisplay.scrollHeight; // Scroll to bottom
+                serverLogDisplay.scrollTop = serverLogDisplay.scrollHeight; 
             } catch (error) {
                 console.error('Error fetching server logs:', error);
                 serverLogDisplay.textContent = `Error loading logs: ${error.message}`;
@@ -827,12 +824,11 @@
         }
 
         serverLogsTabButton.addEventListener('click', () => {
-            clearInterval(serverLogsInterval); // Clear any existing interval
-            fetchServerLogs(); // Fetch immediately on tab click
-            serverLogsInterval = setInterval(fetchServerLogs, 8000); // Set auto-refresh
+            clearInterval(serverLogsInterval); 
+            fetchServerLogs(); 
+            serverLogsInterval = setInterval(fetchServerLogs, 8000); 
         });
 
-        // Clear interval when switching away from server logs tab
         tabButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const tabId = button.getAttribute('data-tab');
@@ -842,7 +838,6 @@
             });
         });
 
-        // Initial check for active tab on load, to start logs refresh if it's the active one
         document.addEventListener('DOMContentLoaded', () => {
             const activeTab = document.querySelector('.tab-btn.active');
             if (activeTab && activeTab.getAttribute('data-tab') === 'server-logs-tab') {
