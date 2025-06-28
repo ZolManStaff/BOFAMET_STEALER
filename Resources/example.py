@@ -10,7 +10,6 @@ import ctypes.wintypes
 import socket
 import uuid
 import aiofiles
-import aiofiles
 import sqlite3
 import platform
 import concurrent
