@@ -1,5 +1,10 @@
 ![LOGO Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/photo_2025-06-22_19-48-33.jpg)
 
+
+NEWS FOR THE NEXT UPDATE: It is planned to transfer the main code of the malware to GoLang or some other lower-level language
+
+
+
 # BOFAMET – Stealer
 
 BOFAMET is a comprehensive solution for collecting data from target systems, consisting of a collector module (stealer) and a centralized command and control (C2) server. The collector, written in Python, is compiled into a standalone Windows executable, and the collected data is transmitted to the C2 server, developed using FastAPI.
