@@ -1,8 +1,8 @@
 ![LOGO Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/photo_2025-06-22_19-48-33.jpg)
 
-
+-----------------------------------------------------------------------------------------------------------------------------
 NEWS FOR THE NEXT UPDATE: It is planned to transfer the main code of the malware to GoLang or some other lower-level language
-
+-----------------------------------------------------------------------------------------------------------------------------
 
 
 # BOFAMET – Stealer
