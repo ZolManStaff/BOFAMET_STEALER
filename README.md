@@ -58,8 +58,9 @@ The C2 server is a web panel based on FastAPI for receiving, storing, and managi
 ### Key Features:
 
 *   **Web Interface:** An intuitive web interface for viewing and managing received logs.
-    ![C2 Panel Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82%2020-06-2025%20222723.jpg)
-    ![C2 Panel Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82%2020-06-2025%20222849.jpg)
+    ![C2 Panel Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/Скриншот%2018-07-2025%20202742.jpg)
+    ![C2 Panel Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/Скриншот%2018-07-2025%20210340.jpg)
+    ![C2 Panel Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/Скриншот%2018-07-2025%20202849.jpg)
 *   **Access Protection:**
     *   **Authentication:** Secure login to the administrative panel using customizable credentials.
     *   **Session IP Binding:** User sessions are bound to their IP address, ensuring logout if an IP address change is detected.
@@ -158,7 +159,7 @@ After successful server launch, the administrative panel can be accessed via a w
 1.  **Launch the builder:**
     *   If you built the `.exe` of the builder: Run `BOFAMET Builder.exe` from the `releases` directory.
     *   If you want to run directly from source (for development): Navigate to the `JSbuilder` directory and run `npm start`.
-    ![Builder Configuration Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82%2022-06-2025%20193542.jpg)
+    ![Builder Configuration Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/Скриншот%2018-07-2025%20210627.jpg)
 2.  **Build Configuration:** In the BOFAMET BUILDER interface:
     *   Enter the C2 Server URL (e.g., `http://your-server-ip:8000`).
     *   Enter the desired Output File Name (e.g., `payload`).
