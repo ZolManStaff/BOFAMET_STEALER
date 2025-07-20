@@ -88,7 +88,7 @@ The C2 server is a web panel based on FastAPI for receiving, storing, and managi
 
 ### 1. C2 Server Installation and Configuration:
 
-The server can be installed on Linux or Windows systems.
+The server can be installed on Linux system.
 
 **Prerequisites:**
 *   **Recommended Operating System: Ubuntu 20.04.**
