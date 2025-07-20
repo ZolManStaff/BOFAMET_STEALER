@@ -108,18 +108,6 @@ The server can be installed on Linux system.
     *   After configuration, `Config_C2.py` will offer options to start the server (in foreground debug mode or background mode with `nohup`). Background mode is recommended for production use.
     *   **Telegram Bot settings and Server IP are now configured/updated directly via the web panel after initial login.**
 
-**Installation Procedure (Windows):**
-1.  **Dependency Installation:** Ensure you have Python 3.x and `pip` installed. Navigate to the server's root directory (`JSbuilder/BOFAMET_SERVER`) and install the necessary libraries:
-    ```bash
-    pip install -r requirements.txt
-    ```
-2.  **Server Configuration:** Run the `Config_C2.py` script:
-    ```bash
-    python Config_C2.py
-    ```
-    *   Follow the same instructions as for Linux for entering username, password, and port. `config.json` will be created automatically.
-3.  **Server Launch:** After `Config_C2.py` completes, you will be prompted to start the server. Choose the desired launch mode.
-
 **Accessing the Control Panel:**
 After successful server launch, the administrative panel can be accessed via a web browser at `http://<YOUR_SERVER_IP>:<PORT>/login`.
     ![Login Page Screenshot](https://raw.githubusercontent.com/ZolManStaff/BOFAMET_STEALER/refs/heads/main/Gallery/%D0%A1%D0%BA%D1%80%D0%B8%D0%BD%D1%88%D0%BE%D1%82%2018-06-2025%20081208.jpg)
@@ -273,7 +261,7 @@ C2-сервер представляет собой веб-панель на б�
 
 ### 1. Установка и Настройка C2-Сервера:
 
-Сервер может быть установлен на системах Linux или Windows.
+Сервер может быть установлен на системе Linux.
 
 **Предварительные Условия:**
 *   **Рекомендуемая Операционная Система: Ubuntu 20.04.**
@@ -292,18 +280,6 @@ C2-сервер представляет собой веб-панель на б�
     *   Скрипт сгенерирует секретный ключ для сессий и сохранит начальные настройки в `config.json`.
     *   После настройки `Config_C2.py` предложит варианты запуска сервера (в режиме отладки на переднем плане или в фоновом режиме с `nohup`). Фоновый режим рекомендуется для производственного использования.
     *   **Настройки Telegram-бота и IP-адрес сервера теперь настраиваются/обновляются непосредственно через веб-панель после первого входа.**
-
-**Процедура Установки (Windows):**
-1.  **Установка Зависимостей:** Убедитесь, что у вас установлен Python 3.x и `pip`. Перейдите в корневую директорию сервера (где находится `requirements.txt`) и установите необходимые библиотеки:
-    ```bash
-    pip install -r requirements.txt
-    ```
-2.  **Конфигурация Сервера:** Запустите скрипт `Config_C2.py`:
-    ```bash
-    python Config_C2.py
-    ```
-    *   Следуйте тем же инструкциям, что и для Linux, для ввода имени пользователя, пароля и порта. `config.json` будет создан автоматически.
-3.  **Запуск Сервера:** После завершения `Config_C2.py` вам будет предложено запустить сервер. Выберите желаемый режим запуска.
 
 **Доступ к Панели Управления:**
 После успешного запуска сервера административная панель будет доступна через веб-браузер по адресу `http://<ВАШ_IP_СЕРВЕРА>:<ПОРТ>/login`.
