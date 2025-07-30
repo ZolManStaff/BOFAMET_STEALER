@@ -333,7 +333,6 @@ async def upload_log(request: Request, background_tasks: BackgroundTasks, file: 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     client_ip = request.client.host
 
-    # ОБНОВЛЕННЫЕ РЕГУЛЯРНЫЕ ВЫРАЖЕНИЯ ДЛЯ СООТВЕТСТВИЯ ФОРМАТУ main.go
     computer_name_match = re.search(r"▪ Computer Name: (.*?)\n", system_info)
     public_ip_match = re.search(r"▪ Public IP: (.*?)\n", system_info)
     
