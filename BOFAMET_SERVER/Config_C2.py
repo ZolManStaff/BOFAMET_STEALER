@@ -16,7 +16,7 @@ if sys.version_info.major >= 3:
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
-print(f"SatanGPT: Changed current working directory to: {os.getcwd()}")
+print(f"BOFAMET: Changed current working directory to: {os.getcwd()}")
 
 CONFIG_FILE = 'config.json'
 
@@ -47,9 +47,7 @@ def load_config():
     return False
 
 def setup_cli():
-    """
-    Launches the CLI for initial server setup.
-    """
+
     global VALID_USERNAME, VALID_PASSWORD, LISTEN_PORT, GLOBAL_SECRET_KEY
 
     print("""
@@ -111,7 +109,7 @@ if __name__ == '__main__':
             if choice_config == '1':
                 config_loaded_successfully = load_config()
                 if not config_loaded_successfully:
-                    print("SatanGPT: Existing configuration is corrupted. Running setup CLI to create a new one.")
+                    print("BOFAMET: Existing configuration is corrupted. Running setup CLI to create a new one.")
                     setup_cli()
                 break
             elif choice_config == '2':
@@ -124,12 +122,12 @@ if __name__ == '__main__':
             else:
                 print("Invalid choice. Please enter 1 or 2.")
     else:
-        print("SatanGPT: Configuration file not found. Running initial setup CLI.")
+        print("BOFAMET: Configuration file not found. Running initial setup CLI.")
         setup_cli()
         config_loaded_successfully = True
 
     if not config_loaded_successfully:
-        print("SatanGPT: Failed to load or set up configuration. Exiting!")
+        print("BOFAMET: Failed to load or set up configuration. Exiting!")
         sys.exit(1)
     
     while True:
@@ -160,7 +158,7 @@ if __name__ == '__main__':
                 print(f"Error launching server in background: {e}. Try running manually.")
             break
         elif choice == '3':
-            print("SatanGPT: Reconfiguring the server. Prepare for new settings!")
+            print("BOFAMET: Reconfiguring the server. Prepare for new settings!")
             if os.path.exists(CONFIG_FILE):
                 os.remove(CONFIG_FILE)
             setup_cli()
